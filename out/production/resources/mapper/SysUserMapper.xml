@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.stars21.dao.SysUserMapper">
+  <resultMap id="BaseResultMap" type="cn.stars21.model.SysUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="last_password_change" jdbcType="BIGINT" property="lastPasswordChange" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, password, role_id, last_password_change, enable
+  </sql>
+  <select id="getUserFromDatabase"  resultMap="BaseResultMap">
+    SELECT
+    u.id,
+    u.username,
+    u.password,
+    u.role_id,
+    u.enable,
+    u.last_password_change,
+    a.auth
+    FROM
+    sys_user as u,
+    sys_role as a
+    WHERE
+    u.role_id = a.role_id AND
+    u.username = #{username,jdbcType=VARCHAR}
+  </select>
+  <select id="nameQueryUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user where username = #{username,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="cn.stars21.model.SysUserKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=INTEGER}
+    and username = #{username,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="cn.stars21.model.SysUserKey">
+    delete from sys_user
+    where id = #{id,jdbcType=INTEGER}
+    and username = #{username,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.stars21.model.SysUser">
+    insert into sys_user (id, username, password,
+    role_id, last_password_change, enable
+    )
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+    #{roleId,jdbcType=INTEGER}, #{lastPasswordChange,jdbcType=BIGINT}, #{enable,jdbcType=BIT}
+    )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.stars21.model.SysUser">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="lastPasswordChange != null">
+        last_password_change,
+      </if>
+      <if test="enable != null">
+        enable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="lastPasswordChange != null">
+        #{lastPasswordChange,jdbcType=BIGINT},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.stars21.model.SysUser">
+    update sys_user
+    <set>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="lastPasswordChange != null">
+        last_password_change = #{lastPasswordChange,jdbcType=BIGINT},
+      </if>
+      <if test="enable != null">
+        enable = #{enable,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+    and username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.stars21.model.SysUser">
+    update sys_user
+    set password = #{password,jdbcType=VARCHAR},
+      role_id = #{roleId,jdbcType=INTEGER},
+      last_password_change = #{lastPasswordChange,jdbcType=BIGINT},
+      enable = #{enable,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+      and username = #{username,jdbcType=VARCHAR}
+  </update>
+</mapper>
